@@ -12,8 +12,8 @@ function debounce(callback, wait) {
         window.clearTimeout(timeoutId);
 
         timeoutId = window.setTimeout(() => {
-            callback.apply(null, args);
-        },args)
+            callback.apply(this, args);
+        }, wait);
     }
 };
 

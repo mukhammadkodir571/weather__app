@@ -7,6 +7,8 @@ let elDegree = selectElement(".info__degree");
 let elWeather = selectElement(".info__weather-name");
 let elWeatherBetween = selectElement(".info__weather-between");
 let elWeatherIcon = selectElement(".weather__icon");
+let elInput = selectElement(".form__input");
+
 
 let days = [
   "Sunday",
@@ -84,5 +86,12 @@ let getWeather = async (lat, lon) => {
   let weather = await request(path);
   render(weather);
 };
-
+let onSearch = debounce(async (evt) => {
+  if (evt.target.value) {
+    let path = `/geo/1.0/direct?q=${evt.target.value}&limit=5&appid=${API_KEY}`;
+    let location = await request(path);
+    console.log(location);
+  }
+},500)
+elInput.addEventListener('input', onSearch)
 // getWeather("51.5073219", "-0.1276474");

@@ -61,8 +61,21 @@ img {
 }
 
 .form {
-  margin-bottom: 60px;
-  padding: 35px 0;
+  position: relative;
+  margin-top: 35px;
+  margin-bottom: 95px;
+  padding:0;
+  padding: 0;
+  width: 100%;
+}
+.form__suggestions{
+  margin: 0;
+  border-radius:0px 10px;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  position: absolute;
+  z-index: 0;
   width: 100%;
 }
 
