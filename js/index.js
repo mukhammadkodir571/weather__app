@@ -8,6 +8,7 @@ let elWeather = selectElement(".info__weather-name");
 let elWeatherBetween = selectElement(".info__weather-between");
 let elWeatherIcon = selectElement(".weather__icon");
 let elInput = selectElement(".form__input");
+let elSuggestions = selectElement(".form__suggestions");
 
 
 let days = [
@@ -42,13 +43,18 @@ let getDate = () => {
 };
 
 let render = weather => {
-  console.log(weather);
+ 
   elLocation.textContent = weather.name;
   elDegree.textContent = `${Math.round(weather.main.temp - 273.15)}°C`;
   elWeather.textContent = weather.weather[0].main;
-  elWeatherBetween.textContent = `${Math.round(
-    weather.main.temp_min - 273.15
-  )}°C / ${Math.round(weather.main.temp_max - 273.15)}°C`;
+   let tempMin = weather.main.temp_min
+     ? Math.round(weather.main.temp_min - 273.15)
+     : "N/A";
+   let tempMax = weather.main.temp_max
+     ? Math.round(weather.main.temp_max - 273.15)
+     : "N/A";
+
+   elWeatherBetween.textContent = `${tempMin}°C / ${tempMax}°C`;
 
   const iconCode = weather.weather[0].icon;
   elWeatherIcon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
@@ -87,11 +93,43 @@ let getWeather = async (lat, lon) => {
   render(weather);
 };
 let onSearch = debounce(async (evt) => {
+  
   if (evt.target.value) {
     let path = `/geo/1.0/direct?q=${evt.target.value}&limit=5&appid=${API_KEY}`;
-    let location = await request(path);
-    console.log(location);
+    let locations = await request(path);
+    elSuggestions.innerHTML = null;
+    locations.forEach((location) => {
+      let elLi = createElement("li");
+
+      elLi.textContent = location.name;
+      elLi.dataset.lat = location.lat;
+      elLi.dataset.lon = location.lon;
+      elSuggestions.append(elLi);
+    })
+
+   
+  } else {
+    elSuggestions.innerHTML = null;
   }
-},500)
+}, 500)
+
+let onSelectLocation = (evt) => {
+
+  if (evt.target.tagName === "LI") {
+    elInput.value = null;
+    elSuggestions.innerHTML = null;
+  }
+  
+  let lat = evt.target.dataset.lat;
+  let lon = evt.target.dataset.lon;
+
+  elSuggestions.innerHTML = null;
+
+
+  getWeather(lat, lon);
+
+  
+}
 elInput.addEventListener('input', onSearch)
-// getWeather("51.5073219", "-0.1276474");
+elSuggestions.addEventListener('click', onSelectLocation)
+getWeather("51.5073219", "-0.1276474");
