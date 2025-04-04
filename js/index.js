@@ -52,7 +52,9 @@ let render = weather => {
      : "N/A";
    let tempMax = weather.main.temp_max
      ? Math.round(weather.main.temp_max - 273.15)
-     : "N/A";
+    : "N/A";
+  
+
 
    elWeatherBetween.textContent = `${tempMin}°C / ${tempMax}°C`;
 
@@ -60,31 +62,6 @@ let render = weather => {
   elWeatherIcon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
   elWeatherIcon.alt = weather.weather[0].description;
   elDate.textContent = getDate();
-
-  // ✅ Corrected video element selection
-  const backgroundVideo = document.getElementById("background__video");
-
-  if (backgroundVideo) {
-    const weatherCondition = weather.weather[0].main.toLowerCase();
-
-    if (weatherCondition.includes("cloud")) {
-      backgroundVideo.src = "videos/cloudy.mp4";
-    } else if (weatherCondition.includes("clear")) {
-      backgroundVideo.src = "videos/sunny.mp4";
-    } else if (weatherCondition.includes("rain")) {
-      backgroundVideo.src = "videos/rain.mp4";
-    } else if (weatherCondition.includes("snow")) {
-      backgroundVideo.src = "videos/snow.mp4";
-    } else if (
-      weatherCondition.includes("haze") ||
-      weatherCondition.includes("mist") ||
-      weatherCondition.includes("fog")
-    ) {
-      backgroundVideo.src = "videos/haze.mp4"; // Add your haze video path
-    } else {
-      backgroundVideo.src = "videos/default.mp4"; // Default video path
-    }
-  }
 };
 
 let getWeather = async (lat, lon) => {
